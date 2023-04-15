@@ -4,8 +4,8 @@
       <p class="prototype__hedding">
         <%= @prototype.title %>
       </p>
-      <%= link_to @prototype.user[:name], root_path, class: :prototype__user %>
-      <% if current_user.id == @prototype.user_id %>
+      <%= link_to @prototype.user[:name], user_path(@prototype.user), class: :prototype__user %>
+      <% if current_user == @prototype.user %>
         <div class="prototype__manage">
           <%= link_to "編集する", edit_prototype_path(@prototype), class: :prototype__btn %>
           <%= link_to "削除する", prototype_path(@prototype), method: :delete, class: :prototype__btn %>
@@ -32,7 +32,7 @@
       <div class="prototype__comments">
         <%# 下記の記述でログインしているユーザーには以下のコメント投稿フォームを表示する %>
         <% if user_signed_in? %>
-           <%= form_with model: [@prototype, @comment],local: true do |f|%>
+           <%= form_with model: [@prototype, @comment], local: true do |f|%>
             <div class="field">
                <%= f.label :comment, "コメント" %><br />
                <%= f.text_field :comment, id:"comment_content" %>
@@ -47,10 +47,9 @@
         <% @comments.each do |comment| %>
           <%# 投稿に紐づくコメントを一覧する処理を記述する %>
             <li class="comments_list">
-              <p>
-              <strong><%= link_to @prototype.user[:name], "/users/#{current_user.id}", class: :comment_user %>:</strong>
               <%= comment.comment%>
-              </p>
+              <%= link_to "（#{comment.user.name}）", user_path(comment.user), class: :comment_user %>
+            </li>
               <% end %>
             </li>
           <%# // 投稿に紐づくコメントを一覧する処理を記述する %>
